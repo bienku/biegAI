@@ -1,9 +1,8 @@
 import requests
-import google.generativeai as genai
+from google import genai
 from config import TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, GEMINI_API_KEY
 
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-2.5-flash')
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 def send_telegram_message(text: str):
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
