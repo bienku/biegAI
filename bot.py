@@ -29,6 +29,7 @@ def build_prompt(run_data: dict) -> str:
 
     DANE:
     Trening: {run_data['name']}
+    Data: {run_data['date']}
     Dystans: {run_data['distance_km']} km | Czas: {run_data['duration_mins']} min | Śr HR: {run_data['avg_hr']}
 
     CZAS W STREFACH (Custom):

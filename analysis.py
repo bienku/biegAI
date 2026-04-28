@@ -1,3 +1,5 @@
+from datetime import datetime
+
 def calculate_custom_hr_zones(hr_stream):
     """Liczy strefy na podstawie dokładnych progów z zegarka Suunto"""
     zones = {"Z1": 0, "Z2": 0, "Z3": 0, "Z4": 0, "Z5": 0}
@@ -25,6 +27,15 @@ def process_run_data(summary, streams):
     # 1. Rozpakowanie strumieni
     stream_map = {s.get('type'): s.get('data', []) for s in streams} if isinstance(streams, list) else {}
 
+    raw_date = summary.get("start_date_local", "")
+    run_date = "Brak daty"
+    if raw_date:
+        try:
+            dt = datetime.fromisoformat(raw_date.replace("Z", "+00:00"))
+            run_date = dt.strftime("%d.%m.%Y %H:%M")
+        except Exception:
+            run_date = raw_date
+
     hr_s = stream_map.get('heartrate', [])
     dist_s = stream_map.get('distance', [])
     vel_s = stream_map.get('velocity_smooth', [])
@@ -40,6 +51,7 @@ def process_run_data(summary, streams):
 
     data = {
         "name": summary.get("name", "Trening"),
+        "date": run_date,
         "distance_km": round(summary.get("distance", 0) / 1000, 2),
         "duration_mins": round(summary.get("moving_time", 0) / 60, 2),
         "avg_hr": summary.get("average_heartrate"),
