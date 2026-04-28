@@ -19,7 +19,7 @@ def fetch_training_details(activity_id: int, access_token: str):
     return response.json()
 
 def fetch_activity_streams(activity_id: int, access_token: str):
-    keys = "distance,heartrate,velocity_smooth,cadence"
+    keys = "distance,heartrate,velocity_smooth,cadence,altitude"
     url = f"https://www.strava.com/api/v3/activities/{activity_id}/streams?keys={keys}&key_by_distance=true"
     headers = { "Authorization": f"Bearer {access_token}" }
     response = requests.get(url, headers=headers)
