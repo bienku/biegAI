@@ -1,3 +1,24 @@
+def calculate_custom_hr_zones(hr_stream):
+    """Liczy strefy na podstawie dokładnych progów z zegarka Suunto"""
+    zones = {"Z1": 0, "Z2": 0, "Z3": 0, "Z4": 0, "Z5": 0}
+
+    for hr in hr_stream:
+        if hr == 0: continue
+
+        # Zones base on the suunto watch:
+        if hr > 172:
+            zones["Z5"] += 1
+        elif hr >= 162:
+            zones["Z4"] += 1
+        elif hr >= 152:
+            zones["Z3"] += 1
+        elif hr >= 143:
+            zones["Z2"] += 1
+        else:
+            zones["Z1"] += 1
+
+    return {k: round(v / 60, 1) for k, v in zones.items() if v > 0}
+
 def process_run_data(summary, streams):
     """Główne formatowanie danych przed wysłaniem do AI"""
 
@@ -14,13 +35,15 @@ def process_run_data(summary, streams):
     valid_cadences = [c for c in cad_s if c > 0]
     is_single_leg = max(valid_cadences) <= 110 if valid_cadences else False
 
-
+    # 3. Własne strefy tętna (Koniec z Paywallem!)
+    custom_zones = calculate_custom_hr_zones(hr_s)
 
     data = {
         "name": summary.get("name", "Trening"),
         "distance_km": round(summary.get("distance", 0) / 1000, 2),
         "duration_mins": round(summary.get("moving_time", 0) / 60, 2),
         "avg_hr": summary.get("average_heartrate"),
+        "hr_zones": custom_zones,
         "laps": []
     }
 

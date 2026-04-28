@@ -2,7 +2,7 @@ from strava import fetch_active_token, fetch_training_details, fetch_activity_st
 from analysis import process_run_data
 from bot import build_prompt
 
-ACTIVITY_ID = 18228066203
+ACTIVITY_ID = 18281925703
 
 def dry_run_test():
     print(f"🚀 Fetching data for activity: {ACTIVITY_ID}...")
