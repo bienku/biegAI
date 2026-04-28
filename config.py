@@ -1,0 +1,15 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+
+STRAVA_CLIENT_ID = os.getenv("STRAVA_CLIENT_ID")
+STRAVA_CLIENT_SECRET = os.getenv("STRAVA_CLIENT_SECRET")
+STRAVA_REFRESH_TOKEN = os.getenv("STRAVA_REFRESH_TOKEN")
+STRAVA_VERIFY_TOKEN = os.getenv("STRAVA_VERIFY_TOKEN")
+
+USER_MAX_HR = 220 - 22 # (220 - AGE)
