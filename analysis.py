@@ -50,6 +50,7 @@ def process_run_data(summary, streams):
         "distance_km": round(summary.get("distance", 0) / 1000, 2),
         "duration_mins": round(summary.get("moving_time", 0) / 60, 2),
         "avg_hr": summary.get("average_heartrate"),
+        "temp": summary.get("average_temp", "Brak"),
         "hr_zones": custom_zones,
         "laps": []
     }
