@@ -8,18 +8,13 @@ def calculate_custom_hr_zones(hr_stream):
         if hr == 0: continue
 
         # Zones base on the suunto watch:
-        if hr > 172:
-            zones["Z5"] += 1
-        elif hr >= 162:
-            zones["Z4"] += 1
-        elif hr >= 152:
-            zones["Z3"] += 1
-        elif hr >= 143:
-            zones["Z2"] += 1
-        else:
-            zones["Z1"] += 1
+        if hr > 172: zones["Z5"] += 1
+        elif hr >= 162: zones["Z4"] += 1
+        elif hr >= 152: zones["Z3"] += 1
+        elif hr >= 143: zones["Z2"] += 1
+        else: zones["Z1"] += 1
 
-    return {k: round(v / 60, 1) for k, v in zones.items() if v > 0}
+    return {k: f"{v//60}:{v%60:02d}" for k, v in zones.items() if v > 0}
 
 def process_run_data(summary, streams):
     """Główne formatowanie danych przed wysłaniem do AI"""
