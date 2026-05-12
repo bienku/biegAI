@@ -81,12 +81,12 @@ def process_run_data(summary, streams):
 
                 # Nazywanie odcinka (zwykłe 500m czy resztówka)
                 if is_last_point and dist_s[i] < current_checkpoint:
-                    current_checkpoint = f"{int(dist_s[i])}m"
+                    lap_label = f"{int(dist_s[i])}m"
                 else:
-                    current_checkpoint = f"{current_checkpoint}m"
+                    lap_label = f"{current_checkpoint}m"
 
                 data["laps"].append({
-                    "odcinek": current_checkpoint,
+                    "odcinek": lap_label,
                     "tempo": pace_str,
                     "tetno": hr_s[i] if i < len(hr_s) else "Brak",
                     "kadencja": cad_val,
