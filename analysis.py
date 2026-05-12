@@ -59,32 +59,42 @@ def process_run_data(summary, streams):
     last_idx = 0
 
     for i in range(len(dist_s)):
-        if dist_s[i] >= current_checkpoint:
-            # Tempo
-            pace_str = "0:00"
-            if vel_s[i] > 0:
-                pace_decimal = 16.666 / vel_s[i]
-                pace_str = f"{int(pace_decimal)}:{int((pace_decimal - int(pace_decimal)) * 60):02d}"
+        is_last_point = (i == len(dist_s) - 1)
 
-            # Kadencja
-            cad_val = cad_s[i] if i < len(cad_s) else 0
-            if is_single_leg and cad_val > 0:
-                cad_val *= 2
+        if dist_s[i] >= current_checkpoint or is_last_point:
+            if i > last_idx:
+                # Tempo
+                pace_str = "0:00"
+                if vel_s[i] > 0:
+                    pace_decimal = 16.666 / vel_s[i]
+                    pace_str = f"{int(pace_decimal)}:{int((pace_decimal - int(pace_decimal)) * 60):02d}"
 
-            # Przewyższenie na tym odcinku (Różnica wysokości)
-            alt_diff = 0
-            if i < len(alt_s) and last_idx < len(alt_s):
-                alt_diff = round(alt_s[i] - alt_s[last_idx], 1)
+                # Kadencja
+                cad_val = cad_s[i] if i < len(cad_s) else 0
+                if is_single_leg and cad_val > 0:
+                    cad_val *= 2
 
-            data["laps"].append({
-                "odcinek": f"{current_checkpoint}m",
-                "tempo": pace_str,
-                "tetno": hr_s[i] if i < len(hr_s) else "Brak",
-                "kadencja": cad_val,
-                "gora_dol": f"+{alt_diff}m" if alt_diff > 0 else f"{alt_diff}m"
-            })
+                # Przewyższenie na tym odcinku (Różnica wysokości)
+                alt_diff = 0
+                if i < len(alt_s) and last_idx < len(alt_s):
+                    alt_diff = round(alt_s[i] - alt_s[last_idx], 1)
 
-            current_checkpoint += 500
-            last_idx = i
+                # Nazywanie odcinka (zwykłe 500m czy resztówka)
+                if is_last_point and dist_s[i] < current_checkpoint:
+                    current_checkpoint = f"{int(dist_s[i])}m"
+                else:
+                    current_checkpoint = f"{current_checkpoint}m"
+
+                data["laps"].append({
+                    "odcinek": current_checkpoint,
+                    "tempo": pace_str,
+                    "tetno": hr_s[i] if i < len(hr_s) else "Brak",
+                    "kadencja": cad_val,
+                    "gora_dol": f"+{alt_diff}m" if alt_diff > 0 else f"{alt_diff}m"
+                })
+
+                last_idx = i
+                if not is_last_point:
+                    current_checkpoint += 500
 
     return data
